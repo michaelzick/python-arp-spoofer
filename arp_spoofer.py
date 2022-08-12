@@ -1,12 +1,34 @@
 #!/usr/bin/env python3
 
 import scapy.all as scapy
+import argparse
 import time
 import sys
 
+# target_ip = '172.17.0.2'
+# gateway_ip = '172.17.0.1'
+
 sent_packet_count = 0
-target_ip = '172.17.0.3'
-gateway_ip = '172.17.0.1'
+
+
+def get_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--target', dest='target_ip',
+                        help='Enter the IP of the target machine.')
+    parser.add_argument('-g', '--gateway', dest='gateway_ip',
+                        help='Enter the IP of the gateway/router.')
+    (arguments) = parser.parse_args()
+
+    if not arguments.target_ip:
+        parser.error('[-] Please specify a target IP (-t, --target).')
+    elif not arguments.gateway_ip:
+        parser.error(
+            '[-] Please specify the gateway/router IP (-g, --gateway).')
+    return arguments
+
+
+target_ip = get_arguments().target_ip
+gateway_ip = get_arguments().gateway_ip
 
 
 def get_mac(target_ip):
