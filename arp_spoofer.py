@@ -27,8 +27,9 @@ def get_arguments():
     return arguments
 
 
-target_ip = get_arguments().target_ip
-gateway_ip = get_arguments().gateway_ip
+arguments = get_arguments()
+target_ip = arguments.target_ip
+gateway_ip = arguments.gateway_ip
 
 
 def get_mac(target_ip):
