@@ -63,7 +63,7 @@ try:
         sent_packet_count = sent_packet_count + 2
         print('\r[+] Packets sent: ' + str(sent_packet_count), end='')
         sys.stdout.flush()
-        time.sleep(2)
+        time.sleep(1)
 except KeyboardInterrupt:
     print('\r[+] Detected Ctrl-c. Reseting ARP tables; please wait.', end='')
     restore_mac(target_ip, gateway_ip)
